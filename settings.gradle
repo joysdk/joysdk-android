@@ -1,0 +1,3 @@
+rootProject.name = "Joysdk"
+include ':app'
+include ':JoySDK'
