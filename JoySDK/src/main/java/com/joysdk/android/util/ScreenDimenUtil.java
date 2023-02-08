@@ -8,6 +8,7 @@ import android.view.WindowManager;
 public class ScreenDimenUtil {
 
     private int mScreenWidth;
+    private float scale;
 
     private static ScreenDimenUtil sInstance;
 
@@ -18,6 +19,7 @@ public class ScreenDimenUtil {
         display.getMetrics(dm);
         mScreenWidth = dm.widthPixels;
         display.getRealMetrics(dm);
+        scale = context.getResources().getDisplayMetrics().density;
     }
 
     public static ScreenDimenUtil getInstance(Context context) {
@@ -33,6 +35,10 @@ public class ScreenDimenUtil {
 
     public int getScreenWidth() {
         return mScreenWidth;
+    }
+
+    public int dp2px(int dpVal) {
+        return (int) (scale * dpVal + 0.5f);
     }
 }
 

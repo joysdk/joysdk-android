@@ -41,6 +41,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        getSupportActionBar().hide();
         bindView();
 
         bindListener();
@@ -63,12 +64,12 @@ public class MainActivity extends AppCompatActivity {
                 isHallMode = false;
                 rv.setVisibility(View.VISIBLE);
                 btn_hall.setVisibility(View.GONE);
-                btn_mode.setText("切换到大厅模式");
+                btn_mode.setText("Switch to lobby");
             } else {
                 isHallMode = true;
                 rv.setVisibility(View.GONE);
                 btn_hall.setVisibility(View.VISIBLE);
-                btn_mode.setText("切换到列表模式");
+                btn_mode.setText("Switch to list");
             }
         });
         btn_reset.setOnClickListener(v -> {
@@ -78,9 +79,9 @@ public class MainActivity extends AppCompatActivity {
                 appKey = etAppKey;
                 token = etToken;
                 initSDK();
-                Toast.makeText(this, "重设成功", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "reset success", Toast.LENGTH_SHORT).show();
             } else {
-                Toast.makeText(this, "appKey或token为空", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "appKey or token is null", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -100,11 +101,18 @@ public class MainActivity extends AppCompatActivity {
 
     private void initSDK() {
         isHallMode = true;
-        rv.setVisibility(View.GONE);
-        btn_mode.setText("切换到列表模式");
         btn_mode.setVisibility(View.VISIBLE);
-        btn_hall.setVisibility(View.VISIBLE);
-        //LogUtil.setDeBug(true);
+        if (isHallMode) {
+            isHallMode = false;
+            rv.setVisibility(View.VISIBLE);
+            btn_hall.setVisibility(View.GONE);
+            btn_mode.setText("Switch to lobby");
+        } else {
+            isHallMode = true;
+            rv.setVisibility(View.GONE);
+            btn_hall.setVisibility(View.VISIBLE);
+            btn_mode.setText("Switch to list");
+        }
         JoySDK.getInstance().init(MainActivity.this, appKey, new JoyCallBackListener.OnInitCompleteListener() {
             @Override
             public void onComplete(int code, List<JoyGameInfoModel> joyGameInfoModels) {
@@ -117,7 +125,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onError(int code) {
-                //失败
+                //Failed
                 log(code);
             }
         });
@@ -129,10 +137,10 @@ public class MainActivity extends AppCompatActivity {
             public void callback(int code, String json) {
                 switch (code) {
                     case JoyGameEventCode.NEW_TPP_CLOSE:
-                        //客户端收到游戏  关闭点击
+                        //Client receives game close click
                         break;
                     case JoyGameEventCode.RECHARGE:
-                        //客户端收到游戏  充值点击
+                        //The client receives the game recharge click
                         break;
                 }
             }
@@ -145,10 +153,10 @@ public class MainActivity extends AppCompatActivity {
             public void callback(int code, String json) {
                 switch (code) {
                     case JoyGameEventCode.NEW_TPP_CLOSE:
-                        //客户端收到游戏  关闭点击
+                        //Client receives game close click
                         break;
                     case JoyGameEventCode.RECHARGE:
-                        //客户端收到游戏  充值点击
+                        //The client receives the game recharge click
                         break;
                 }
             }

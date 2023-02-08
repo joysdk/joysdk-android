@@ -1,9 +1,8 @@
 package com.joysdk.android.webview;
 
 import android.app.Activity;
-import android.os.Handler;
-import android.os.Looper;
 import android.os.Message;
+import android.view.View;
 import android.webkit.JavascriptInterface;
 
 import com.google.gson.reflect.TypeToken;
@@ -13,6 +12,7 @@ import com.joysdk.android.base.JoyGameEventCode;
 import com.joysdk.android.model.JoyAppInfo;
 import com.joysdk.android.util.LogUtil;
 import com.joysdk.android.util.SpUtils;
+import com.joysdk.android.util.ThreadUtil;
 
 import org.json.JSONObject;
 
@@ -20,7 +20,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class JoyJSInterface {
-    public static final String JS_INTERFACE_NAME = "JSBridgeService";           //JS调用类名
+    public static final String JS_INTERFACE_NAME = "JSBridgeService";
     private Activity activity;
     private JoyWebLayout webLayout;
 
@@ -38,11 +38,10 @@ public class JoyJSInterface {
             if (JoyCallBackListener.mOnJoyGameEventListener != null) {
                 JoyCallBackListener.mOnJoyGameEventListener.sendMessage(message);
             }
-            if (activity != null) {
-                activity.runOnUiThread(() -> {
-                    JoySDK.getInstance().hideGameView();
-                });
-            }
+            JoyAppInfo.isShowGameAble = false;
+            ThreadUtil.runOnUiThread(() -> {
+                JoySDK.getInstance().hideGameView();
+            });
         }
     }
 
@@ -59,7 +58,7 @@ public class JoyJSInterface {
     public void OpenGameSucc(String json) {
         try {
             LogUtil.d("OpenGameSucc:" + json);
-            //持久化打开过的game
+            //Persist opened games 持久化打开过的game
             JSONObject jsonObject = new JSONObject(json);
             int gameId = jsonObject.getInt("gameId");
             Set<Integer> integers = SpUtils.getObject(activity, new TypeToken<Set<Integer>>() {
@@ -72,30 +71,24 @@ public class JoyJSInterface {
             }.getType());
             if (gameId != 0 && activity != null) {
                 JoyAppInfo.isHallHasPreloaded = false;
-                if (JoyAppInfo.isOpenHall) {
-                    //大厅模式打开游戏成功
-                    activity.runOnUiThread(() -> {
-                        try {
-                            JoySDK.getInstance().setHeight(activity, gameId);
-                            if (JoyAppInfo.isShowGameAble) {
-                                JoySDK.getInstance().showGameView();
-                            } else {
-                                webLayout.loadUrl("javascript:window.HttpTool?.NativeToJs('ExitGame')");
+                ThreadUtil.runOnUiThread(() -> {
+                    try {
+                        JoySDK.getInstance().setHeight(activity, gameId);
+                        if (JoyAppInfo.isShowGameAble) {
+                            if (webLayout != null) {
+                                webLayout.setVisibility(View.VISIBLE);
                             }
-                        } catch (Exception e) {
-                            e.printStackTrace();
+                            LogUtil.d("openGame --step4-- showGameByJs");
+                        } else {
+                            if (webLayout != null) {
+                                webLayout.loadUrl("javascript:window.HttpTool.NativeToJs('ExitGame')");
+                            }
+                            LogUtil.d("Have been hidden");
                         }
-                    });
-                } else {
-                    //列表模式打开游戏成功
-                    activity.runOnUiThread(() -> {
-                        try {
-                            JoySDK.getInstance().showGameView();
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    });
-                }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                });
             } else {
                 JoyAppInfo.isHallHasPreloaded = true;
             }
@@ -108,6 +101,14 @@ public class JoyJSInterface {
     public void OpenGameBegin(String json) {
         try {
             LogUtil.d("OpenGameBegin:" + json);
+            if (JoyAppInfo.isOpenHall) {
+                JoyAppInfo.isHallHasPreloaded = false;
+                JoyAppInfo.isHasLoadingView = true;
+                //添加悬浮窗
+                JSONObject jsonObject = new JSONObject(json);
+                int gameId = jsonObject.getInt("gameId");
+                JoySDK.getInstance().initFloatingButton(activity, gameId);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }

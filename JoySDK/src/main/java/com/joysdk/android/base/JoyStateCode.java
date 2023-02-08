@@ -8,4 +8,5 @@ public final class JoyStateCode {
     public final static int APP_KEY_INVALID = 313;           //AppKey无效
     public final static int NETWORK_ERROR = 10001;           //网络错误
     public final static int SERVER_ERROR = 10002;            //服务器错误
+    public final static int RES_MISS_ERROR = 10003;          //缺少资源文件错误
 }
