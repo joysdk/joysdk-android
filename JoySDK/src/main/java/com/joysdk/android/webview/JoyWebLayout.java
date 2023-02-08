@@ -15,6 +15,8 @@ import com.joysdk.android.JoyCallBackListener;
 import com.joysdk.android.JoySDK;
 import com.joysdk.android.base.JoyGameEventCode;
 import com.joysdk.android.base.ResourceExchange;
+import com.joysdk.android.model.JoyAppInfo;
+import com.joysdk.android.util.AnimationUtil;
 
 public class JoyWebLayout extends LinearLayout {
     private WebView mWebViewBase;
@@ -42,15 +44,16 @@ public class JoyWebLayout extends LinearLayout {
         mFrameLayoutTop = findViewById(mRes.getIdId("joy_id_fl_top"));
         mFrameLayoutTop.setOnClickListener(v -> {
             try {
+                if (mWebViewBase != null) {
+                    mWebViewBase.loadUrl("javascript:window.HttpTool.NativeToJs('ExitGame')");
+                }
                 Message message = new Message();
                 message.what = JoyGameEventCode.NEW_TPP_CLOSE;
                 if (JoyCallBackListener.mOnJoyGameEventListener != null) {
                     JoyCallBackListener.mOnJoyGameEventListener.sendMessage(message);
                 }
+                JoyAppInfo.isShowGameAble = false;
                 JoySDK.getInstance().hideGameView();
-                if (mWebViewBase != null) {
-                    mWebViewBase.loadUrl("javascript:window.HttpTool?.NativeToJs('ExitGame')");
-                }
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -68,6 +71,14 @@ public class JoyWebLayout extends LinearLayout {
         lp.width = (int) viewWidth;
         lp.height = (int) viewHeight;
         mWebViewBase.setLayoutParams(lp);
+    }
+
+    public void moveToViewLocation() {
+        mWebViewBase.startAnimation(AnimationUtil.moveToViewLocation());
+    }
+
+    public void moveToViewLocation(float layoutHeight, float webViewHeight, float viewHeight) {
+        mWebViewBase.startAnimation(AnimationUtil.moveToViewLocation(layoutHeight, webViewHeight, viewHeight));
     }
 
     public int getWebHeight() {

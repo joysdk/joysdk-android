@@ -8,7 +8,7 @@ android {
 
     defaultConfig {
         applicationId "com.joysdk.demo"
-        minSdkVersion 23
+        minSdkVersion 21
         targetSdkVersion 32
         versionCode 1
         versionName "1.0"

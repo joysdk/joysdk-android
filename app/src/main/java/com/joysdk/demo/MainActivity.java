@@ -41,6 +41,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        getSupportActionBar().hide();
         bindView();
 
         bindListener();
@@ -100,11 +101,18 @@ public class MainActivity extends AppCompatActivity {
 
     private void initSDK() {
         isHallMode = true;
-        rv.setVisibility(View.GONE);
-        btn_mode.setText("切换到列表模式");
         btn_mode.setVisibility(View.VISIBLE);
-        btn_hall.setVisibility(View.VISIBLE);
-        //LogUtil.setDeBug(true);
+        if (isHallMode) {
+            isHallMode = false;
+            rv.setVisibility(View.VISIBLE);
+            btn_hall.setVisibility(View.GONE);
+            btn_mode.setText("切换到大厅模式");
+        } else {
+            isHallMode = true;
+            rv.setVisibility(View.GONE);
+            btn_hall.setVisibility(View.VISIBLE);
+            btn_mode.setText("切换到列表模式");
+        }
         JoySDK.getInstance().init(MainActivity.this, appKey, new JoyCallBackListener.OnInitCompleteListener() {
             @Override
             public void onComplete(int code, List<JoyGameInfoModel> joyGameInfoModels) {

@@ -6,11 +6,13 @@ public class JoyAppInfo {
     public static Context ctx;
     public static String appKey;
     public static String token;
-    public static boolean isHallHasPreloaded = false;
-    public static boolean isOpenHall = false;
-    public static boolean isNoInitHall = false;
-    private static boolean isDebug = false;
-    public static boolean isShowGameAble = false;
+    public static boolean isHallHasPreloaded = false;   //是否在大厅
+    public static boolean isOpenHall = false;           //是否打开大厅
+    public static boolean isNoInitHall = false;         //是否没初始化
+    private static boolean isDebug = false;             //是否测试服
+    public static boolean isShowGameAble = false;       //是否可以展示游戏
+    public static boolean isHasLoadingView = false;     //是否有加载动画
+    public static boolean showFloatingButton = false;     //是否开启悬浮窗功能
 
     private volatile static JoyAppInfo instance = null;
 
@@ -74,5 +76,13 @@ public class JoyAppInfo {
 
     public void setIsDebug(boolean isDebug) {
         JoyAppInfo.isDebug = isDebug;
+    }
+
+    public boolean getShowFloatingButton() {
+        return showFloatingButton;
+    }
+
+    public void setShowFloatingButton(boolean showFloatingButton) {
+        JoyAppInfo.showFloatingButton = showFloatingButton;
     }
 }

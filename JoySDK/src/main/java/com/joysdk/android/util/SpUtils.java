@@ -48,4 +48,16 @@ public class SpUtils {
         SharedPreferences sp = context.getSharedPreferences(DEFAULT_SP_NAME, Context.MODE_PRIVATE);
         return sp.getString(key, defValue);
     }
+
+    public static String getPkgName(Context context) {
+        try {
+            if (context != null) {
+                return context.getPackageName();
+            } else {
+                return "";
+            }
+        } catch (Exception e) {
+            return "";
+        }
+    }
 }
