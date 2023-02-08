@@ -66,7 +66,7 @@ public class JoySDK {
     private String roomId;
     private String ext;
     private JoyFloatingLayout mFloatingView;
-    private ViewGroup.LayoutParams params; //布局初始参数(位置，大小等)
+    private ViewGroup.LayoutParams params; //Layout initial parameters (location, size, etc.)
 
     public int init(final Activity activity, final String appKey, JoyCallBackListener.OnInitCompleteListener onInitCompleteListener) {
         JoyAppInfo.getInstance().setCtx(activity);
@@ -96,7 +96,7 @@ public class JoySDK {
                 initResponse(s, activity);
             }
         }, new Response.ErrorListener() {
-            // 请求失败时执行的函数
+            // The function to execute when the request fails
             @Override
             public void onErrorResponse(VolleyError volleyError) {
                 new Handler().postDelayed(new Runnable() {
@@ -109,7 +109,7 @@ public class JoySDK {
                                 initResponse(s, activity);
                             }
                         }, new Response.ErrorListener() {
-                            // 请求失败时执行的函数
+                            // The function to execute when the request fails
                             @Override
                             public void onErrorResponse(VolleyError volleyError) {
                                 Message message = new Message();
@@ -194,23 +194,23 @@ public class JoySDK {
         }
         mWebLayout.addJsInterface(activity, new JoyJSInterface(mWebLayout, activity));
 
-        //重新设置宽高
+        //Reset the width and height
         float screenWidth = ScreenDimenUtil.getInstance(activity).getScreenWidth();
         float viewHeight = screenWidth * height / width;
         mWebLayout.setWebHeightAndWidth(screenWidth, viewHeight);
-        //靠底部添加
+        //Bottom add
         FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(
                 FrameLayout.LayoutParams.MATCH_PARENT,
                 FrameLayout.LayoutParams.MATCH_PARENT);
-        //重新加载链接
+        //Reload link
         mWebLayout.loadUrl(gameUrl);
 
-        //移除WebView
+        //remove WebView
         ViewGroup parent = (ViewGroup) mWebLayout.getParent();
         if (parent != null) {
             parent.removeView(mWebLayout);
         }
-        //添加WebView到activity
+        //add WebView to activity
         final ViewGroup view = (ViewGroup) activity.getWindow().getDecorView();
         final ViewGroup contentView = view.findViewById(android.R.id.content);
         contentView.addView(mWebLayout, params);
@@ -279,40 +279,40 @@ public class JoySDK {
                 if (mWebLayout == null) {
                     mWebLayout = new JoyWebLayout(activity);
                 }
-                //添加Js接口
+                //addJsInterface
                 mWebLayout.addJsInterface(activity, new JoyJSInterface(mWebLayout, activity));
                 //重新设置宽高
                 float viewWidth = ScreenDimenUtil.getInstance(activity).getScreenWidth();
                 float viewHeight = viewWidth * height / width;
                 mWebLayout.setWebHeightAndWidth(viewWidth, viewHeight);
 
-                //靠底部添加
+                //Bottom add
                 FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(
                         FrameLayout.LayoutParams.MATCH_PARENT,
                         FrameLayout.LayoutParams.MATCH_PARENT);
-                //移除WebView
+                //remove WebView
                 ViewGroup parent = (ViewGroup) mWebLayout.getParent();
                 if (parent != null) {
                     parent.removeView(mWebLayout);
                 }
-                //添加WebView到activity
+                //add WebView to activity
                 final ViewGroup view = (ViewGroup) activity.getWindow().getDecorView();
                 final ViewGroup contentView = view.findViewById(android.R.id.content);
                 contentView.addView(mWebLayout, params);
                 mWebLayout.moveToViewLocation();
                 LogUtil.d("openGame --step2-- startAnimation");
-                //判断是否自己的游戏和判断是否缓存过和判断是否在大厅
+                //Judge if your game and judge if it's cached and judge if it's in the hall
                 Set<Integer> integers = SpUtils.getObject(activity, new TypeToken<Set<Integer>>() {
                 }.getType());
-                if (JoyAppInfo.isHallHasPreloaded && integers != null && integers.contains(gameId) && TextUtils.isEmpty(joyGameHoleInfoModel.getGameUrl())) {
+                if (JoyAppInfo.isHallHasPreloaded && integers != null && integers.contains(gameId) && joyGameHoleInfoModel.getIsCPGame() == 0) {
                     JoyAppInfo.isHasLoadingView = false;
                     openGameByIdToJs(token, gameId, roomId, ext);
                 } else {
-                    //重新加载链接
+                    //Reload link
                     JoyAppInfo.isHallHasPreloaded = false;
                     JoyAppInfo.isHasLoadingView = true;
                     if (joyGameHoleInfoModel.getIsCPGame() != 0) {
-                        //第三方提供的游戏
+                        //Games provided by third parties
                         lobbyUrl = joyGameHoleInfoModel.getGameUrl();
                     } else {
                         if (lobbyUrl != null && lobbyUrl.contains("?")) {
@@ -396,22 +396,22 @@ public class JoySDK {
             if (mWebLayout == null) {
                 mWebLayout = new JoyWebLayout(activity);
             }
-            //添加Js接口
+            //addJsInterface
             mWebLayout.addJsInterface(activity, new JoyJSInterface(mWebLayout, activity));
-            //重新设置宽高
+            //Reset the width and height
             float viewWidth = ScreenDimenUtil.getInstance(activity).getScreenWidth();
             float viewHeight = viewWidth * height / width;
             mWebLayout.setWebHeightAndWidth(viewWidth, viewHeight);
-            //靠底部添加
+            //Bottom add
             FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(
                     FrameLayout.LayoutParams.MATCH_PARENT,
                     FrameLayout.LayoutParams.MATCH_PARENT);
-            //移除WebView
+            //remove WebView
             ViewGroup parent = (ViewGroup) mWebLayout.getParent();
             if (parent != null) {
                 parent.removeView(mWebLayout);
             }
-            //添加WebView到activity
+            //add WebView to activity
             final ViewGroup view = (ViewGroup) activity.getWindow().getDecorView();
             final ViewGroup contentView = view.findViewById(android.R.id.content);
             contentView.addView(mWebLayout, params);
@@ -424,7 +424,7 @@ public class JoySDK {
                 JoyAppInfo.isHasLoadingView = false;
                 openGameByIdToJs(token, gameId, roomId, ext);
             } else {
-                //重新加载链接
+                //Reload link
                 JoyAppInfo.isHasLoadingView = true;
                 if (gameUrl != null && gameUrl.contains("?")) {
                     gameUrl = gameUrl + "&appKey=" + JoyAppInfo.appKey + "&token=" + token + "&mini=1" + "&pkgName=" + SpUtils.getPkgName(activity);
@@ -499,17 +499,17 @@ public class JoySDK {
             }
         }
 
-        //重新设置宽高
-        float viewWidth = ScreenDimenUtil.getInstance(activity).getScreenWidth();//屏幕宽度
-        float viewHeight = viewWidth * height / width;//游戏高度
-        int layoutHeight = mWebLayout.getHeight();//当前整个布局的高度
-        int webViewHeight = mWebLayout.getWebHeight();//当前webview的高度
+        //Reset the width and height
+        float viewWidth = ScreenDimenUtil.getInstance(activity).getScreenWidth();//Screen width
+        float viewHeight = viewWidth * height / width;//Game height
+        int layoutHeight = mWebLayout.getHeight();//The current height of the entire layout
+        int webViewHeight = mWebLayout.getWebHeight();//Height of the current webview
         mWebLayout.requestLayout();
         mWebLayout.setWebHeightAndWidth(viewWidth, viewHeight);
         if (!JoyAppInfo.isHasLoadingView) {
             mWebLayout.moveToViewLocation();
         } else {
-            //设置高度做动画
+            //Set the height to animate
             mWebLayout.moveToViewLocation(layoutHeight, webViewHeight, viewHeight);
         }
     }
@@ -566,7 +566,7 @@ public class JoySDK {
         }
 
         mFloatingView.setMagnetViewListener(event -> {
-            //悬浮窗打开游戏
+            //The suspension window opens the game
             openGame(this.activity.get(), token, this.gameId, roomId, ext, JoyCallBackListener.mOnJoyGameEventListener);
         });
         attach(this.activity.get());
@@ -592,14 +592,14 @@ public class JoySDK {
     }
 
     /**
-     * 将view绑定到activity的布局中
+     * Bind the view to the activity layout
      */
     private void attach(Activity activity) {
         attach(getActivityRoot(activity));
     }
 
     /**
-     * 将view绑定到布局中
+     * Bind the view to the layout
      */
     private void attach(FrameLayout container) {
         new Handler(Looper.getMainLooper()).post(() -> {

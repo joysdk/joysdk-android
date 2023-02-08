@@ -20,7 +20,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class JoyJSInterface {
-    public static final String JS_INTERFACE_NAME = "JSBridgeService";           //JS调用类名
+    public static final String JS_INTERFACE_NAME = "JSBridgeService";
     private Activity activity;
     private JoyWebLayout webLayout;
 
@@ -58,7 +58,7 @@ public class JoyJSInterface {
     public void OpenGameSucc(String json) {
         try {
             LogUtil.d("OpenGameSucc:" + json);
-            //持久化打开过的game
+            //Persist opened games 持久化打开过的game
             JSONObject jsonObject = new JSONObject(json);
             int gameId = jsonObject.getInt("gameId");
             Set<Integer> integers = SpUtils.getObject(activity, new TypeToken<Set<Integer>>() {

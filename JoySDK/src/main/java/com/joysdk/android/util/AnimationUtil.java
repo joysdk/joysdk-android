@@ -7,7 +7,7 @@ import android.view.animation.TranslateAnimation;
 public class AnimationUtil {
 
     /**
-     * 从控件的底部移动到控件所在位置
+     * Move from the bottom of the control to the location of the control
      *
      * @return
      */
@@ -23,8 +23,8 @@ public class AnimationUtil {
 
     public static AnimationSet moveToViewLocation(float layoutHeight, float webViewHeight, float viewHeight) {
         AnimationSet animationSet = new AnimationSet(true);
-        //起始坐标减去终点坐标占后来的游戏高度的多少
-        //layoutHeight 整个布局高度; webViewHeight 原webView高度; viewHeight 变化后的高度.
+        //Start coordinates minus end coordinates divided by subsequent game height
+        //layoutHeight, the height of the entire layout; webViewHeight, original webView height; viewHeight, the height after the change.
         float radio = ((layoutHeight - webViewHeight) - (layoutHeight - viewHeight)) / viewHeight;
         TranslateAnimation mHiddenAction = new TranslateAnimation(Animation.RELATIVE_TO_SELF, 0.0f,
                 Animation.RELATIVE_TO_SELF, 0.0f, Animation.RELATIVE_TO_SELF,

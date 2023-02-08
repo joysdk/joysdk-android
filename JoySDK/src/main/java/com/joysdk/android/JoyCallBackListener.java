@@ -11,7 +11,7 @@ import java.util.List;
 
 public class JoyCallBackListener {
 
-    public static OnInitCompleteListener mOnInitCompleteListener;     //初始化
+    public static OnInitCompleteListener mOnInitCompleteListener;     //init
 
     public static OnJoyGameEventListener mOnJoyGameEventListener;
 
